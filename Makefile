@@ -65,3 +65,6 @@ rpm/source: collector.spec archive
 .PHONY: collector.spec
 collector.spec: collector.spec.in
 	sed -e "s/%%PROJECT%%/$(PROJECT)/" -e "s/%%VERSION%%/$(OTELCOL_VERSION)/" < $< > $@
+
+rpm/fedora-testbuild:
+	docker run --rm -v ${PWD}:/src:z -it fedora:39 /bin/bash -c 'export GOPROXY=https://proxy.golang.org,direct && dnf install -y git make curl gzip tar rpm-build golang fedpkg && pushd src && make rpm/source && popd'
